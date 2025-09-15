@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { IoArrowBackOutline } from "react-icons/io5";
 import { useParams, Link } from "react-router-dom";
 
 export default function Detail() {
@@ -19,8 +20,8 @@ export default function Detail() {
 
   return (
     <div className="container mx-auto p-6">
-      <Link to="/" className="text-blue-600 underline mb-4 inline-block">
-         Orqaga
+      <Link to="/" className="mb-4 flex items-center gap-1">
+        <IoArrowBackOutline /> BACK
       </Link>
 
       <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -39,7 +40,7 @@ export default function Detail() {
           </p>
           <p className="text-gray-700 mb-4">{product.description}</p>
           <p className="text-yellow-600 font-medium">
-             {product.rating.rate} ({product.rating.count} )
+            {product.rating.rate} ({product.rating.count} )
           </p>
         </div>
       </div>
