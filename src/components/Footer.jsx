@@ -1,50 +1,178 @@
-import React from 'react'
-import { FaReact } from 'react-icons/fa'
+import React, { useMemo } from "react";
+import { motion } from "framer-motion";
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
+  const footerTexts = useMemo(() => {
+    const defaults = {
+      description: "Your one-stop shop for amazing products and inspiring galleries.",
+      quickLinksTitle: "Quick Links",
+      contactTitle: "Contact Info",
+      followTitle: "Follow Us",
+      newsletterTitle: "Newsletter",
+      newsletterPlaceholder: "Your email",
+      newsletterButton: "Subscribe",
+      contact: {
+        email: "Email: info@parapinoo.com",
+        phone: "Phone: +998 90 340 06 06",
+        address: "Address: Tashkent, Uzbekistan",
+      },
+    };
+    const translation = t("footer", { returnObjects: true });
+    return {
+      ...defaults,
+      ...(translation && typeof translation === "object" ? translation : {}),
+      contact: {
+        ...defaults.contact,
+        ...(translation &&
+        typeof translation === "object" &&
+        translation.contact &&
+        typeof translation.contact === "object"
+          ? translation.contact
+          : {}),
+      },
+    };
+  }, [t]);
+
+  const navLinks = useMemo(
+    () => [
+      { name: t("nav.home"), href: "/" },
+      { name: t("nav.about"), href: "/biz-haqimizda" },
+      { name: t("nav.gallery"), href: "/rasmlar" },
+      { name: t("nav.products"), href: "/products" },
+      { name: t("nav.contact"), href: "/boglanish" },
+    ],
+    [t]
+  );
+
+  const socialLinks = [
+    { icon: <FaFacebookF />, href: "#" },
+    { icon: <FaTwitter />, href: "#" },
+    { icon: <FaInstagram />, href: "https://instagram.com/parapinoo" },
+    { icon: <FaLinkedinIn />, href: "#" },
+  ];
+
+  const footerSections = [
+    {
+      title: footerTexts.quickLinksTitle,
+      type: "links",
+      items: navLinks,
+    },
+    {
+      title: footerTexts.contactTitle,
+      type: "contacts",
+      items: [
+        { name: footerTexts.contact.email, href: "mailto:info@parapinoo.com" },
+        { name: footerTexts.contact.phone, href: "tel:+998903400606" },
+        { name: footerTexts.contact.address, href: "#" },
+      ],
+    },
+    {
+      title: footerTexts.followTitle,
+      type: "social",
+      items: socialLinks.map((s) => s),
+    },
+    {
+      title: footerTexts.newsletterTitle,
+      type: "newsletter",
+    },
+  ];
+
   return (
-    <footer className="text-gray-600 dark:text-gray-300 body-font bg-white dark:bg-gray-900">
-      <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-        <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900 dark:text-white">
-          <FaReact className='text-4xl text-[#0cf7d3]' />
-          <span className="ml-3 text-xl">Influesi.org</span>
-        </a>
-        <p className="text-sm text-gray-500 dark:text-gray-400 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 dark:sm:border-gray-700 sm:py-2 sm:mt-0 mt-4">
-          © 2020 Tailblocks —
-          <a
-            href="https://twitter.com/knyttneve"
-            className="text-gray-600 dark:text-gray-400 ml-1 hover:text-indigo-500 dark:hover:text-indigo-400"
-            rel="noopener noreferrer"
-            target="_blank"
+    <motion.footer
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+      className="w-full bg-gradient-to-r from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-inner p-10"
+    >
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="flex flex-col gap-4">
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500"
           >
-            @knyttneve
+            Parapinoo
+          </motion.div>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            {footerTexts.description}
+          </p>
+        </div>
+
+        {footerSections.map((section, idx) => (
+          <div key={idx} className="flex flex-col gap-3">
+            <h3 className="font-bold text-lg text-blue-600 dark:text-blue-400">
+              {section.title}
+            </h3>
+            {section.type === "social" ? (
+              <div className="flex gap-3 mt-2">
+                {section.items.map((s, i) => (
+                  <motion.a
+                    key={i}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    whileHover={{ scale: 1.3, color: "#3b82f6" }}
+                    className="text-gray-600 dark:text-gray-400 text-xl transition-all duration-300"
+                  >
+                    {s.icon}
+                  </motion.a>
+                ))}
+              </div>
+            ) : section.type === "newsletter" ? (
+              <form className="flex gap-2 mt-2">
+                <input
+                  type="email"
+                  placeholder={footerTexts.newsletterPlaceholder}
+                  className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                  {footerTexts.newsletterButton}
+                </button>
+              </form>
+            ) : (
+              <ul className="flex flex-col gap-2 mt-2">
+                {section.items.map((item, i) => (
+                  <li key={i}>
+                    <a
+                      href={item.href}
+                      className="text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                    >
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-10 border-t border-gray-300 dark:border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          © 2025 Parapinoo —{" "}
+          <a href="#" className="hover:text-blue-500">
+            @parapinoo
           </a>
         </p>
-        <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-          <a className="text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400">
-            <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-            </svg>
-          </a>
-          <a className="ml-3 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400">
-            <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-              <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-            </svg>
-          </a>
-          <a href='https://instagram.com/jamshid_qayimov' className="ml-3 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
-            </svg>
-          </a>
-          <a className="ml-3 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400">
-            <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0" className="w-5 h-5" viewBox="0 0 24 24">
-              <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
-              <circle cx="4" cy="4" r="2" stroke="none"></circle>
-            </svg>
-          </a>
-        </span>
+        <div className="flex gap-4 mt-4 md:mt-0">
+          {socialLinks.map((s, i) => (
+            <motion.a
+              key={i}
+              href={s.href}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ scale: 1.3, color: "#3b82f6" }}
+              className="text-gray-600 dark:text-gray-400 text-xl transition-all duration-300"
+            >
+              {s.icon}
+            </motion.a>
+          ))}
+        </div>
       </div>
-    </footer>
-  )
+    </motion.footer>
+  );
 }
+

@@ -9,10 +9,10 @@ export default function () {
   return (
     <div>
       <Hero/>
-      <Pricing/>
-      <Statistics/>
-      <Team/>
+      {/* <Pricing/> */}
+      {/* <Statistics/> */}
       <BackEnd/>
+      <Team/>
     </div>
   )
 }

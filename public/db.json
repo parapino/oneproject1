@@ -1,0 +1,22 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "MacBook Pro M3",
+      "price": 1900,
+      "description": "Apple M3 chip bilan jihozlangan kuchli noutbuk"
+    },
+    {
+      "id": 2,
+      "name": "iPhone 15 Pro",
+      "price": 1300,
+      "description": "Titanium korpusli eng yangi iPhone"
+    },
+    {
+      "id": 3,
+      "name": "AirPods Pro 2",
+      "price": 300,
+      "description": "Aktiv shovqinni bekor qiluvchi quloqchinlar"
+    }
+  ]
+}
